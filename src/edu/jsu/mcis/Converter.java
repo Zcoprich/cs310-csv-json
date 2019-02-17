@@ -113,10 +113,60 @@ public class Converter {
 
             StringWriter writer = new StringWriter();
             CSVWriter csvWriter = new CSVWriter(writer, ',', '"', '\n');
+            Iterator<String[]> iterator;
+            Iterator<String> iterator_2;
+            JSONParser parser = new JSONParser();
+            JSONObject json = (JSONObject)parser.parse(jsonString);
+            JSONArray colHeaders = (JSONArray) json.get("colHeaders");
+            JSONArray rowHeaders = (JSONArray) json.get("rowHeaders");
+            JSONArray data = (JSONArray) json.get("data");
             
-            // INSERT YOUR CODE HERE
             
+            String[] header = new String[colHeaders.size()];
+            String[] rowHeader = new String[rowHeaders.size()];
+            String[] num;
+             
+            iterator_2 = colHeaders.iterator();
+            for(int i = 0; iterator_2.hasNext(); i++)
+                header[i] = iterator_2.next();
+            csvWriter.writeNext(header);
+            
+            iterator_2 = rowHeaders.iterator();
+            for(int i = 0; iterator_2.hasNext(); i++)
+                rowHeader[i] = iterator_2.next();
+
+            String line[] = new String[header.length];
+                    
+            for (int i = 0; i < data.size(); i++) {
+                JSONArray innerArray = (JSONArray) data.get(i);
+                num = new String[innerArray.size()]; 
+                for (int j = 0; j < innerArray.size(); j++) {
+                    String result = "";
+                    result += innerArray.get(j).toString();
+                    num[j] = result;
+                }
+                
+                for(int m = 0; m < line.length; m++)
+                {
+                    if(m == 0)
+                        line[m] = rowHeader[i];
+                    else
+                    {
+                        int d;
+                        for(d = 1; d < num.length; d++)
+                            line[d] = num[d-1];
+                        line[d] = num[d -1];
+                    }
+                }
+                csvWriter.writeNext(line);
+            }
+            
+
+
+            System.out.print(writer);
+
         }
+        
         
         catch(Exception e) { return e.toString(); }
         
