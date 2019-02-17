@@ -162,8 +162,7 @@ public class Converter {
             }
             
 
-
-            System.out.print(writer);
+            results = writer.toString();
 
         }
         
